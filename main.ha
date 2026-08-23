@@ -13,15 +13,21 @@ export fn main() void = {
 	};
 	defer lib::config_free(config);
 
-	// TODO handle multiple todo files
-	const todo_file = config.files[0];
+	const todo_files = config.files;
 
 	// load todos
-	const todos = match (todo::open(todo_file)) {
-		case let todos: []str => yield todos;
-		case let err: fs::error => fmt::fatalf("Error opening {}: {}", todo_file, fs::strerror(err));
-	};
+	let todos: []str = [];
 	defer strings::freeall(todos);
+
+	// TODO simplify this
+	for (let file .. todo_files) {
+		match (todo::open(file)) {
+			case let todo_items: []str =>
+				for (let todo .. todo_items) append(todos, todo)!;
+				free(todo_items);
+			case let err: fs::error => fmt::fatalf("Error opening {}: {}", file, fs::strerror(err));
+		};
+	};
 
 	// print todos
 	fmt::println("To-dos:")!;
