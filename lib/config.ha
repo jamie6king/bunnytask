@@ -4,6 +4,7 @@ use fs;
 use io;
 use strings;
 use os;
+use wordexp;
 
 export type config = struct { files: []str };
 
@@ -15,7 +16,7 @@ fn load_item(scanner: *ini::scanner) (ini::entry | done) = {
 };
 
 // caller must free after use using [[config_free]]
-export fn config_read() (*config | fs::error | nomem) = {
+export fn config_read() (*config | fs::error | wordexp::error | nomem) = {
 
     const config_file = dirs::config("bunnytask");
     const config_file = strings::concat(config_file, "/config.ini")?;
@@ -33,9 +34,17 @@ export fn config_read() (*config | fs::error | nomem) = {
 
 	for (let entry => load_item(&scanner)) {
 		if (strings::trim(entry.1) == "todo_file") {
-			// TODO shell expand
-			const file = strings::trim(entry.2);
 
+			// trim & make spaces shell-safe
+			const file = strings::trim(entry.2);
+			const file = strings::replace(file, " ", "\\ ")?;
+			defer free(file);
+
+			// shell expand
+			const file = wordexp::wordexp(file)?;
+			defer strings::freeall(file);
+
+			const file = file[0];
 			append(files, strings::dup(file)?)?;
 		};
 	};
