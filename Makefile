@@ -1,9 +1,14 @@
 EXE := bunnytask
-HARE := hare
-PREFIX := /usr/local
+HARE ?= hare
+PREFIX ?= /usr/local
+
+ifdef DEBUG
+	HAREFLAGS += -lc
+	LDFLAGS += -fsanitize=address
+endif
 
 $(EXE):
-	$(HARE) build -o $@
+	LDFLAGS=$(LDFLAGS) $(HARE) build $(HAREFLAGS) -o $@
 
 install: $(EXE)
 	mkdir -p $(PREFIX)/bin/
@@ -16,6 +21,6 @@ clean:
 	$(RM) $(EXE)
 
 check:
-	$(HARE) test
+	LDFLAGS=$(LDFLAGS) $(HARE) test $(HAREFLAGS)
 
 .PHONY: check clean install uninstall

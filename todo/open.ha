@@ -16,6 +16,7 @@ export fn open(file: str) ([]str | fs::error) = {
 	// read
 	const todos = strings::fromutf8(todos)!;
 	const todos = strings::split(todos, "\n")!;
+	defer free(todos);
 
 	lib::slice_remove_empty(&todos);
 
