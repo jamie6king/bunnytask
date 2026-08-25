@@ -1,0 +1,43 @@
+name: Check code
+on: push
+
+jobs:
+    analyse:
+        name: Analyse actions
+        runs-on: ubuntu-slim
+
+        permissions:
+            contents: read
+            security-events: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v7
+
+            - name: Setup CodeQL
+              uses: github/codeql-action/init@v4
+              with:
+                  languages: actions
+                  build-mode: none
+
+            - name: Analyse actions
+              uses: github/codeql-action/analyze@v4
+              with:
+                  category: /language:actions
+
+    test:
+        name: Test
+        runs-on: ubuntu-26.04
+
+        permissions:
+            contents: read
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v7
+
+            - name: Setup Hare
+              run: sudo apt-get update && sudo apt-get install -y hare
+
+            - name: Run tests
+              run: make check DEBUG=1
