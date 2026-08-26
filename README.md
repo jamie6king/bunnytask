@@ -2,6 +2,8 @@
 
 Bunnytask is a simple TODO.TXT manager, written in [Hare](https://harelang.org/).
 
+View release changes in the [CHANGELOG](CHANGELOG.md).
+
 ## Configuration
 
 The config file should be located at `${XDG_CONFIG_HOME}/bunnytask/config.ini` & is required to run. The following configuration options are available:
