@@ -7,6 +7,10 @@ ifdef DEBUG
 	LDFLAGS += -fsanitize=address
 endif
 
+ifdef RELEASE
+    HAREFLAGS += -R
+endif
+
 $(EXE):
 	LDFLAGS=$(LDFLAGS) $(HARE) build $(HAREFLAGS) -o $@
 
