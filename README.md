@@ -20,3 +20,5 @@ Bunnytask only requires [Hare](https://harelang.org/) to build. The standard set
 ## Contributing
 
 Patches & bug reports are welcome! Simply raise [an issue](https://github.com/jamie6king/bunnytask/issues/new) or email the patch to [bugs+bunnytask@jamiedanielk.ing](mailto:bugs+bunnytask@jamiedanielk.ing) and I will take a look.
+
+Licensed under GPLv3 - view the full license [here](LICENSE).
